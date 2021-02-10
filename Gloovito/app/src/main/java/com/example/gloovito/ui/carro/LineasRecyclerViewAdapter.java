@@ -47,6 +47,7 @@ public class LineasRecyclerViewAdapter extends RecyclerView.Adapter<LineasRecycl
     }
     public interface OnLineasClickListener {
         public void eliminar(Linea l);
+        public void editar(Linea l);
     }
     @Override
     public int getItemCount() {
@@ -57,7 +58,7 @@ public class LineasRecyclerViewAdapter extends RecyclerView.Adapter<LineasRecycl
         public final View mView;
         public final TextView nombreLocal,nombreProducto,precioycantidad,subtotal,numLinea;
         public Linea linea;
-        public Button boton;
+        public Button boton,edit;
 
         public ViewHolder(View view) {
             super(view);
@@ -68,6 +69,13 @@ public class LineasRecyclerViewAdapter extends RecyclerView.Adapter<LineasRecycl
             subtotal = (TextView) view.findViewById(R.id.textViewSubtotalLinea);
             numLinea = (TextView) view.findViewById(R.id.textViewNumLinea);
             boton = view.findViewById(R.id.button_eliminar_producto);
+            edit = view.findViewById(R.id.button_editar_linea);
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.editar(linea);
+                }
+            });
             boton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

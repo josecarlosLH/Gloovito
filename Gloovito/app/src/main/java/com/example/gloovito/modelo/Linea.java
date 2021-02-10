@@ -1,17 +1,21 @@
 package com.example.gloovito.modelo;
 
-public class Linea {
-    String numlinea,local,producto;
+import java.io.Serializable;
+
+public class Linea implements Serializable {
+    String numlinea,local,localid,producto,productoid;
     int cantidad;
     Double precio,subtotal;
 
     public Linea() {
     }
 
-    public Linea(String numlinea, String local, String producto, int cantidad, Double precio, Double subtotal) {
+    public Linea(String numlinea, String local, String localid, String producto , String productoid, int cantidad, Double precio, Double subtotal) {
         this.numlinea = numlinea;
         this.local = local;
         this.producto = producto;
+        this.localid = localid;
+        this.productoid = productoid;
         this.cantidad = cantidad;
         this.precio = precio;
         this.subtotal = subtotal;
@@ -19,6 +23,22 @@ public class Linea {
 
     public String getNumlinea() {
         return numlinea;
+    }
+
+    public String getLocalid() {
+        return localid;
+    }
+
+    public void setLocalid(String localid) {
+        this.localid = localid;
+    }
+
+    public String getProductoid() {
+        return productoid;
+    }
+
+    public void setProductoid(String productoid) {
+        this.productoid = productoid;
     }
 
     public void setNumlinea(String numlinea) {

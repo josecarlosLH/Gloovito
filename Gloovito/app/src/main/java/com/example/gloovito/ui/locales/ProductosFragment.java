@@ -33,8 +33,6 @@ import java.util.ArrayList;
 public class ProductosFragment extends Fragment implements ProductosRecyclerViewAdapter.OnProductosClickListener{
     private RecyclerView recyclerView;
     private Local l;
-    private DatabaseReference productos;
-    private ValueEventListener listenerProd;
     private ImageView imagenLocal;
     private TextView nombre,direccion;
     private ArrayList<Producto>lista;
@@ -80,8 +78,7 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
             }
             nombre.setText(l.getNombre());
             direccion.setText(l.getDireccion());
-            productos = FirebaseDatabase.getInstance().getReference("locales").child(l.getIdlocal()).child("productos");
-            listenerProd = new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference("locales").child(l.getIdlocal()).child("productos").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     lista.clear();
@@ -97,7 +94,7 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            };
+            });
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
             Toast.makeText(getContext(),"El local no se ha cargado correctamente", Toast.LENGTH_SHORT).show();
@@ -105,17 +102,6 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
     }
     public void cargaLista(){
         recyclerView.setAdapter(new ProductosRecyclerViewAdapter(lista,getContext(),this));
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        productos.addValueEventListener(listenerProd);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        productos.removeEventListener(listenerProd);
     }
 
     @Override
@@ -132,6 +118,8 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
             if(cantidadComprar <= p.getStock()) {
                 linea.setCantidad(cantidadComprar);
                 linea.setLocal(l.getNombre());
+                linea.setLocalid(l.getIdlocal());
+                linea.setProductoid(p.getIdproducto());
                 linea.setProducto(p.getNombre());
                 linea.setPrecio(p.getPrecio());
                 linea.setSubtotal(p.getPrecio()*cantidadComprar);

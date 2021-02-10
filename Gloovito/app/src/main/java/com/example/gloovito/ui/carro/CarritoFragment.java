@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,5 +60,13 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
             }
         }
         cargarLista();
+    }
+
+    @Override
+    public void editar(Linea l) {
+        Bundle b = new Bundle();
+        b.putString("idproducto",l.getProductoid());
+        b.putSerializable("lineas",l);
+        Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_productosFragment,b);
     }
 }

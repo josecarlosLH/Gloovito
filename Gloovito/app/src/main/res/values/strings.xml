@@ -15,4 +15,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="buy">Buy</string>
+    <string name="edit">Edit</string>
+    <string name="weakpass">Your password is weak</string>
+    <string name="accountexisterror">Exist one account with this email</string>
+    <string name="registercorrect">Register correctly</string>
+    <string name="logincorrect">Login correctly</string>
+    <string name="errorlogin">This account doesn\'t exist</string>
+    <string name="update">Update</string>
+    <string name="errornumber">Number incorrect</string>
 </resources>

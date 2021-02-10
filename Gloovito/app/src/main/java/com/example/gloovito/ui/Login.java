@@ -32,6 +32,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -159,17 +160,18 @@ public class Login extends Fragment {
                                 user.setCartera(0.0);
                                 user.setReserva(0.0);
                                 anadirUsuario(user);
-                                Toast.makeText(getContext(), "Registrado Correctamente", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.registercorrect, Toast.LENGTH_SHORT).show();
                             } else
                                 if(task.getException() instanceof FirebaseAuthUserCollisionException){
-
-                                    Toast.makeText(getContext(), "Ya existe una cuenta", Toast.LENGTH_SHORT).show();
-
+                                    Toast.makeText(getContext(), R.string.accountexisterror, Toast.LENGTH_SHORT).show();
+                                } else if(task.getException() instanceof FirebaseAuthWeakPasswordException){
+                                    Toast.makeText(getContext(), R.string.weakpass, Toast.LENGTH_SHORT).show();
                                 }
                         }
 
                     });
                 }
+
             }
         });
         b_login.setOnClickListener(new View.OnClickListener() {
@@ -184,10 +186,11 @@ public class Login extends Fragment {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
                                 ((MainActivity)getActivity()).login();
-                                Toast.makeText(getContext(), "Sesion iniciada correctamente", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.logincorrect, Toast.LENGTH_SHORT).show();
                                 Navigation.findNavController(getView()).navigate(R.id.action_login_to_nav_home);
-                            }else
-                                Toast.makeText(getContext(),"Ocurrio un error", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getContext(), R.string.errorlogin, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }

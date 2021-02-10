@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gloovito</string>
+    <string name="navigation_drawer_open">Abre el navegador</string>
+    <string name="navigation_drawer_close">Cierra el navegador</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Cabecera navegacion</string>
+    <string name="action_settings">Opciones</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_gallery">Galeria</string>
+    <string name="menu_slideshow">Carrousel</string>
+    <string name="login">Login</string>
+    <string name="register">Registrarse</string>
+    <string name="buy">Comprar</string>
+    <string name="edit">Editar</string>
+    <string name="weakpass">Tu contraseña es debil</string>
+    <string name="accountexisterror">Ya existe una cuenta con ese email</string>
+    <string name="registercorrect">Registrado correctamente</string>
+    <string name="logincorrect">Logeado correctamente</string>
+    <string name="errorlogin">No existe la cuenta</string>
+    <string name="update">Actualizar</string>
+    <string name="errornumber">Numero incorrecto</string>
+</resources>
