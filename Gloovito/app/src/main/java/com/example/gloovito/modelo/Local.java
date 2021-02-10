@@ -1,8 +1,9 @@
 package com.example.gloovito.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Local {
+public class Local implements Serializable {
     String nombre,direccion,idlocal,imagenURL;
     ArrayList<Producto> productos;
 

@@ -45,6 +45,7 @@ public class LocalesRecyclerViewAdapter extends RecyclerView.Adapter<LocalesRecy
         }
         holder.nombre.setText(mValues.get(position).getNombre());
         holder.local = mValues.get(position);
+        holder.direccion.setText(mValues.get(position).getDireccion());
     }
     public interface OnLocalesClickListener {
         public void irProductos(Local l);
@@ -57,7 +58,7 @@ public class LocalesRecyclerViewAdapter extends RecyclerView.Adapter<LocalesRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView mImagen;
-        public final TextView nombre;
+        public final TextView nombre,direccion;
         public Local local;
 
         public ViewHolder(View view) {
@@ -65,6 +66,7 @@ public class LocalesRecyclerViewAdapter extends RecyclerView.Adapter<LocalesRecy
             mView = view;
             mImagen = (ImageView) view.findViewById(R.id.imageViewImagenLocal);
             nombre = (TextView) view.findViewById(R.id.textViewNombreLocal);
+            direccion = view.findViewById(R.id.textViewDireccion);
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

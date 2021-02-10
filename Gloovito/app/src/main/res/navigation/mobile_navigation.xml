@@ -9,7 +9,11 @@
         android:id="@+id/nav_home"
         android:name="com.example.gloovito.ui.locales.LocalesFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_locales" />
+        tools:layout="@layout/fragment_locales" >
+        <action
+            android:id="@+id/action_nav_home_to_productosFragment"
+            app:destination="@id/productosFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_gallery"
@@ -31,4 +35,14 @@
             android:id="@+id/action_login_to_nav_home"
             app:destination="@id/nav_home" />
     </fragment>
+    <fragment
+        android:id="@+id/productosFragment"
+        android:name="com.example.gloovito.ui.locales.ProductosFragment"
+        android:label="fragment_productos"
+        tools:layout="@layout/fragment_productos" />
+    <fragment
+        android:id="@+id/carritoFragment"
+        android:name="com.example.gloovito.ui.carro.CarritoFragment"
+        android:label="fragment_carrito"
+        tools:layout="@layout/fragment_carrito" /><action android:id="@+id/action_global_carritoFragment" app:destination="@id/carritoFragment"/>
 </navigation>

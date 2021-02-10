@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.gloovito.modelo.Linea;
 import com.example.gloovito.modelo.Local;
 import com.example.gloovito.modelo.Producto;
 import com.example.gloovito.modelo.Usuario;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     public Usuario user;
     public DrawerLayout drawer;
+    public ArrayList<Linea> carrito;
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
@@ -39,14 +41,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        carrito = new ArrayList<>();
         FloatingActionButton fab = findViewById(R.id.fab);
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -55,9 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.action_global_carritoFragment);
+            }
+        });
         /*ArrayList<Producto> productos= new ArrayList<>();
         productos.add(new Producto("0","Bebida azucarada","Cocacola",1.00,5));
         productos.add(new Producto("1","Cerveza lata 50cl","Alhambra",0.50,60));

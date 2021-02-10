@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,6 +59,8 @@ public class LocalesFragment extends Fragment implements LocalesRecyclerViewAdap
 
     @Override
     public void irProductos(Local l) {
-        System.out.println("Hace evento");
+        Bundle b = new Bundle();
+        b.putSerializable("local",l);
+        Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_productosFragment,b);
     }
 }
