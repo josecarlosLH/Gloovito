@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gloovito.MainActivity;
 import com.example.gloovito.R;
 import com.example.gloovito.modelo.Local;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +57,10 @@ public class LocalesFragment extends Fragment implements LocalesRecyclerViewAdap
     public void cargarLista(){
         recyclerView.setAdapter(new LocalesRecyclerViewAdapter(locales,getContext(),this));
     }
-
+    public void onStart(){
+        super.onStart();
+        ((MainActivity)getActivity()).fab.setVisibility(View.VISIBLE);
+    }
     @Override
     public void irProductos(Local l) {
         Bundle b = new Bundle();

@@ -17,15 +17,19 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.gloovito.ui.gallery.GalleryFragment"
+        android:name="com.example.gloovito.ui.gallery.PedidosFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_pedidos" >
+        <action
+            android:id="@+id/action_nav_gallery_to_detallePedidoFragment"
+            app:destination="@id/detallePedidoFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.example.gloovito.ui.slideshow.SlideshowFragment"
+        android:name="com.example.gloovito.ui.slideshow.CuentaFragment"
         android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_cuenta" />
     <fragment
         android:id="@+id/login"
         android:name="com.example.gloovito.ui.Login"
@@ -44,5 +48,19 @@
         android:id="@+id/carritoFragment"
         android:name="com.example.gloovito.ui.carro.CarritoFragment"
         android:label="fragment_carrito"
-        tools:layout="@layout/fragment_carrito" /><action android:id="@+id/action_global_carritoFragment" app:destination="@id/carritoFragment"/>
+        tools:layout="@layout/fragment_carrito" >
+        <action
+            android:id="@+id/action_carritoFragment_to_editarLineaFragment"
+            app:destination="@id/editarLineaFragment" />
+    </fragment><action android:id="@+id/action_global_carritoFragment" app:destination="@id/carritoFragment"/>
+    <fragment
+        android:id="@+id/editarLineaFragment"
+        android:name="com.example.gloovito.ui.carro.EditarLineaFragment"
+        android:label="fragment_editar_linea"
+        tools:layout="@layout/fragment_editar_linea" />
+    <fragment
+        android:id="@+id/detallePedidoFragment"
+        android:name="com.example.gloovito.ui.gallery.DetallePedidoFragment"
+        android:label="fragment_editar_linea"
+        tools:layout="@layout/fragment_editar_linea" />
 </navigation>

@@ -21,4 +21,17 @@
     <string name="errorlogin">No existe la cuenta</string>
     <string name="update">Actualizar</string>
     <string name="errornumber">Numero incorrecto</string>
+    <string name="wallet">Cartera</string>
+    <string name="reserved">Reservado</string>
+    <string name="charge">Cargar</string>
+    <string name="quantity">Cantidad</string>
+    <string name="enteredcorrect">Ingresado correctamente</string>
+    <string name="account">Cuenta</string>
+    <string name="orders">Pedidos</string>
+    <string name="details">Detalles</string>
+    <string name="restart">Reiniciar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="review">Revisión</string>
+    <string name="canceled">Cancelado</string>
+    <string name="completed">Completado</string>
 </resources>

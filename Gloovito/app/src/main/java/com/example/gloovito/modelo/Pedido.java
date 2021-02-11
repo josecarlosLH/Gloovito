@@ -1,8 +1,9 @@
 package com.example.gloovito.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Pedido {
+public class Pedido implements Serializable {
     String idpedido, fecha, estado;
     Double total;
     ArrayList<Linea> lineas;

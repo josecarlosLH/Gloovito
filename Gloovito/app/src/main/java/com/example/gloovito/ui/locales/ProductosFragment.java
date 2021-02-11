@@ -131,4 +131,8 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
             Toast.makeText(getContext(),"El numero introducido no es correcto", Toast.LENGTH_SHORT).show();
         }
     }
+    public void onStart(){
+        super.onStart();
+        ((MainActivity)getActivity()).fab.setVisibility(View.VISIBLE);
+    }
 }

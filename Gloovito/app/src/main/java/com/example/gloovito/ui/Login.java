@@ -196,6 +196,7 @@ public class Login extends Fragment {
                 }
             }
         });
+        ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
     }
     public void anadirUsuario(final Usuario user){
 

@@ -6,8 +6,10 @@ import android.view.Menu;
 
 import com.example.gloovito.modelo.Linea;
 import com.example.gloovito.modelo.Local;
+import com.example.gloovito.modelo.Pedido;
 import com.example.gloovito.modelo.Producto;
 import com.example.gloovito.modelo.Usuario;
+import com.example.gloovito.ui.gallery.PedidosFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     public Usuario user;
     public DrawerLayout drawer;
     public ArrayList<Linea> carrito;
+    public ArrayList<Pedido> pedidos;
+    public FloatingActionButton fab;
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
@@ -42,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         carrito = new ArrayList<>();
-        FloatingActionButton fab = findViewById(R.id.fab);
+        pedidos = new ArrayList<>();
+        fab = findViewById(R.id.fab);
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -67,6 +72,23 @@ public class MainActivity extends AppCompatActivity {
         String id = FirebaseDatabase.getInstance().getReference("locales").push().getKey();
         Local local = new Local("Panaderia pepe","Calle sol. Granada",id,productos);
         FirebaseDatabase.getInstance().getReference("locales").child(id).setValue(local);*/
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("pedidos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    Pedido pedido = dataSnapshot.getValue(Pedido.class);
+                    if(pedido != null){
+                        pedidos.add(pedido);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -75,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -84,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void login(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("usuarios").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(Usuario.class);

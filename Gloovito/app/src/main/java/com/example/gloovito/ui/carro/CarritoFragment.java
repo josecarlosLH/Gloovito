@@ -47,6 +47,7 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
     }
     public void onStart(){
         super.onStart();
+        ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
         cargarLista();
     }
     public void cargarLista(){
@@ -67,6 +68,6 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
         Bundle b = new Bundle();
         b.putString("idproducto",l.getProductoid());
         b.putSerializable("lineas",l);
-        Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_productosFragment,b);
+        Navigation.findNavController(getView()).navigate(R.id.action_carritoFragment_to_editarLineaFragment,b);
     }
 }

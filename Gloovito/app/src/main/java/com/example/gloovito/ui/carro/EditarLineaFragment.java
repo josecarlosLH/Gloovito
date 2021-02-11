@@ -80,17 +80,18 @@ public class EditarLineaFragment extends Fragment {
     }
     public void cargarInterfaz(){
         nombre.setText(prod.getNombre());
-        cantidad.setText(prod.getStock());
-        precioArticulo.setText(prod.getPrecio()+"");
+        cantidad.setText(prod.getStock()+"/");
+        precioArticulo.setText(prod.getPrecio()+" €");
+        cantidadElegida.setText(String.valueOf(l.getCantidad()));
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     int cantidaActualizar = Integer.parseInt(cantidadElegida.getText().toString());
-                    if(cantidaActualizar < prod.getStock()) {
+                    if(cantidaActualizar < prod.getStock() && cantidaActualizar > 0) {
                         l.setCantidad(cantidaActualizar);
                         l.setSubtotal(cantidaActualizar * l.getPrecio());
-                        for (int i=0; i<=((MainActivity) getActivity()).carrito.size();i++){
+                        for (int i=0; i<((MainActivity) getActivity()).carrito.size();i++){
                             if(((MainActivity) getActivity()).carrito.get(i).getNumlinea().equals(l.getNumlinea())){
                                 ((MainActivity) getActivity()).carrito.set(i,l);
                             }
@@ -101,5 +102,9 @@ public class EditarLineaFragment extends Fragment {
                 }
             }
         });
+    }
+    public void onStart(){
+        super.onStart();
+        ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
     }
 }
