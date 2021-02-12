@@ -36,4 +36,7 @@
     <string name="review">Review</string>
     <string name="canceled">Canceled</string>
     <string name="completed">Completed</string>
+    <string name="ordercanceled">Your order has been canceled</string>
+    <string name="ordercomplete">Your order has been completed</string>
+    <string name="orderchange">You have changes in one of your orders</string>
 </resources>

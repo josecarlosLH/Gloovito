@@ -62,5 +62,5 @@
         android:id="@+id/detallePedidoFragment"
         android:name="com.example.gloovito.ui.gallery.DetallePedidoFragment"
         android:label="fragment_editar_linea"
-        tools:layout="@layout/fragment_editar_linea" />
+        tools:layout="@layout/fragment_editar_linea" /><action android:id="@+id/action_global_nav_gallery" app:destination="@id/nav_gallery"/>
 </navigation>

@@ -12,14 +12,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.gloovito.MainActivity;
 import com.example.gloovito.R;
 import com.example.gloovito.modelo.Linea;
+import com.example.gloovito.modelo.Pedido;
 import com.example.gloovito.ui.locales.LocalesRecyclerViewAdapter;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapter.OnLineasClickListener{
     private RecyclerView recyclerView;
+    private Button confirmar;
+    private SimpleDateFormat sdf;
 
     public CarritoFragment() {
         // Required empty public constructor
@@ -41,9 +51,16 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sdf = new SimpleDateFormat("dd/MM/yyyy");
         recyclerView = view.findViewById(R.id.recyclerViewCarrito);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        confirmar = view.findViewById(R.id.button_confirmar_carrito);
+        confirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmarPedido();
+            }
+        });
     }
     public void onStart(){
         super.onStart();
@@ -69,5 +86,25 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
         b.putString("idproducto",l.getProductoid());
         b.putSerializable("lineas",l);
         Navigation.findNavController(getView()).navigate(R.id.action_carritoFragment_to_editarLineaFragment,b);
+    }
+    public void confirmarPedido(){
+        if(!((MainActivity) getActivity()).carrito.isEmpty()){
+            Pedido p = new Pedido();
+            p.setFecha(sdf.format(new Date()));
+            p.setLineas(((MainActivity) getActivity()).carrito);
+            double total = 0.0;
+            for(Linea l : ((MainActivity) getActivity()).carrito){
+                total += l.getSubtotal();
+            }
+            p.setTotal(total);
+            String id = FirebaseDatabase.getInstance().getReference("pedidos").child(((MainActivity) getActivity()).user.getId()).push().getKey();
+            p.setIdpedido(id);
+            p.setEstado("Revision");
+            p.setMensajeEstado("");
+            FirebaseDatabase.getInstance().getReference("pedidos").child(((MainActivity) getActivity()).user.getId()).child(id).setValue(p);
+            ((MainActivity) getActivity()).carrito.clear();
+            cargarLista();
+            Toast.makeText(getContext(),"Pedido creado correctamente", Toast.LENGTH_SHORT).show();
+        }
     }
 }

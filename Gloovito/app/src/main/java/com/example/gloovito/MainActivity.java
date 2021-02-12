@@ -3,6 +3,7 @@ package com.example.gloovito;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.example.gloovito.modelo.Linea;
 import com.example.gloovito.modelo.Local;
@@ -14,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -72,23 +75,6 @@ public class MainActivity extends AppCompatActivity {
         String id = FirebaseDatabase.getInstance().getReference("locales").push().getKey();
         Local local = new Local("Panaderia pepe","Calle sol. Granada",id,productos);
         FirebaseDatabase.getInstance().getReference("locales").child(id).setValue(local);*/
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("pedidos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data : dataSnapshot.getChildren()){
-                    Pedido pedido = dataSnapshot.getValue(Pedido.class);
-                    if(pedido != null){
-                        pedidos.add(pedido);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -104,11 +90,62 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
     public void login(){
+        final View view = this.getCurrentFocus();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("usuarios").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(Usuario.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("pedidos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        ref2.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                Pedido pedido = snapshot.getValue(Pedido.class);
+                if(pedido != null){
+                    pedidos.add(pedido);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                System.out.println("hace modificar");
+                Pedido pedido = snapshot.getValue(Pedido.class);
+                boolean cancelado = false;
+                boolean completado = false;
+                for(int i=0 ; i<pedidos.size() ; i++) {
+                    if(pedidos.get(i).getIdpedido().equals(pedido.getIdpedido())){
+                        pedidos.set(i,pedido);
+                        if(pedido.getEstado().equals("Cancelado"))
+                            cancelado = true;
+                        else if(pedido.getEstado().equals("Completado"))
+                            completado = true;
+                    }
+                }
+                if(cancelado & completado){
+                    Toast.makeText(getApplicationContext(),R.string.orderchange,Toast.LENGTH_SHORT).show();
+                } else if(cancelado){
+                    Toast.makeText(getApplicationContext(),R.string.ordercanceled,Toast.LENGTH_SHORT).show();
+                } else if(completado){
+                    Toast.makeText(getApplicationContext(),R.string.ordercomplete,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override

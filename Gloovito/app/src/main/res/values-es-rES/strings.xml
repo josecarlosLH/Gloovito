@@ -34,4 +34,7 @@
     <string name="review">Revisión</string>
     <string name="canceled">Cancelado</string>
     <string name="completed">Completado</string>
+    <string name="ordercanceled">Tu pedido ha sido cancelado</string>
+    <string name="ordercomplete">Tu pedido ha sido completado</string>
+    <string name="orderchange">Tienes cambios en tus pedidos</string>
 </resources>

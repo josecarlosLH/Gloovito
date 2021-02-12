@@ -83,7 +83,7 @@ public class DetallePedidoFragment extends Fragment {
         }
         else if(pedido.getEstado().equals("Cancelado")){
             estadoPedido.setText(R.string.canceled);
-        } else{
+        } else if(pedido.getEstado().equals("Completado")){
             estadoPedido.setText(R.string.completed);
         }
         recargarLista();
@@ -97,10 +97,11 @@ public class DetallePedidoFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Pedido ped= dataSnapshot.getValue(Pedido.class);
+                System.out.println("Hace evento");
                 if(ped != null){
-                    if (ped.getEstado() == "Revision"){
+                    if (ped.getEstado().equals("Revision")){
                         ped.setEstado("Cancelado");
-                        ref.setValue(ped);
+                        FirebaseDatabase.getInstance().getReference("pedidos").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(pedido.getIdpedido()).setValue(ped);
                         pedido = ped;
                         cargarInterfaz();
                     }

@@ -4,19 +4,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Pedido implements Serializable {
-    String idpedido, fecha, estado;
+    String idpedido, fecha, estado, mensajeEstado;
     Double total;
     ArrayList<Linea> lineas;
 
     public Pedido() {
     }
 
-    public Pedido(String idpedido, String fecha, String estado, Double total, ArrayList<Linea> lineas) {
+    public Pedido(String idpedido, String fecha, String estado,String mensajeEstado, Double total, ArrayList<Linea> lineas) {
         this.idpedido = idpedido;
         this.fecha = fecha;
         this.estado = estado;
         this.total = total;
         this.lineas = lineas;
+        this.mensajeEstado = mensajeEstado;
     }
 
     public String getIdpedido() {
@@ -57,5 +58,13 @@ public class Pedido implements Serializable {
 
     public void setLineas(ArrayList<Linea> lineas) {
         this.lineas = lineas;
+    }
+
+    public String getMensajeEstado() {
+        return mensajeEstado;
+    }
+
+    public void setMensajeEstado(String mensajeEstado) {
+        this.mensajeEstado = mensajeEstado;
     }
 }
