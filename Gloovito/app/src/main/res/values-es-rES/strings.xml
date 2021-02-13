@@ -3,8 +3,8 @@
     <string name="app_name">Gloovito</string>
     <string name="navigation_drawer_open">Abre el navegador</string>
     <string name="navigation_drawer_close">Cierra el navegador</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Gloovito</string>
+    <string name="nav_header_subtitle">support@gloovito.com</string>
     <string name="nav_header_desc">Cabecera navegacion</string>
     <string name="action_settings">Opciones</string>
     <string name="menu_home">Inicio</string>
@@ -37,4 +37,15 @@
     <string name="ordercanceled">Tu pedido ha sido cancelado</string>
     <string name="ordercomplete">Tu pedido ha sido completado</string>
     <string name="orderchange">Tienes cambios en tus pedidos</string>
+    <string name="emptyuser">No puede estar vacio</string>
+    <string name="shopcart">Carrito</string>
+    <string name="product">Producto</string>
+    <string name="recreate">¿Quieres crear una copia de este pedido? Se eliminara el carrito actual, ademas de que no se añadiran las lineas de articulos con stock insuficiente</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="confirmbuy">¿Confirmas este pedido?</string>
+    <string name="ordercorrec">Pedido creado correctamente</string>
+    <string name="nostock">No hay suficiente stock</string>
+    <string name="errorlocal">Ha ocurrido un error cargando el local</string>
+    <string name="locales">Locales</string>
 </resources>

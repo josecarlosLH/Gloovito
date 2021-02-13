@@ -1,9 +1,11 @@
 package com.example.gloovito.ui.carro;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gloovito.MainActivity;
@@ -29,6 +32,7 @@ import java.util.Date;
 public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapter.OnLineasClickListener{
     private RecyclerView recyclerView;
     private Button confirmar;
+    private TextView total;
     private SimpleDateFormat sdf;
 
     public CarritoFragment() {
@@ -55,10 +59,25 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
         recyclerView = view.findViewById(R.id.recyclerViewCarrito);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         confirmar = view.findViewById(R.id.button_confirmar_carrito);
+        total = view.findViewById(R.id.textViewTotalCarrito);
         confirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmarPedido();
+                new AlertDialog.Builder(getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.buy)
+                        .setMessage(R.string.confirmbuy)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                confirmarPedido();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+
             }
         });
     }
@@ -68,6 +87,11 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
         cargarLista();
     }
     public void cargarLista(){
+        Double totalNum = 0.0;
+        for (Linea l : ((MainActivity) getActivity()).carrito){
+            totalNum += l.getSubtotal();
+        }
+        total.setText(totalNum.toString()+"€");
         recyclerView.setAdapter(new LineasRecyclerViewAdapter( ((MainActivity) getActivity()).carrito,getContext(),this));
     }
     @Override
@@ -97,14 +121,20 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
                 total += l.getSubtotal();
             }
             p.setTotal(total);
-            String id = FirebaseDatabase.getInstance().getReference("pedidos").child(((MainActivity) getActivity()).user.getId()).push().getKey();
-            p.setIdpedido(id);
-            p.setEstado("Revision");
-            p.setMensajeEstado("");
-            FirebaseDatabase.getInstance().getReference("pedidos").child(((MainActivity) getActivity()).user.getId()).child(id).setValue(p);
-            ((MainActivity) getActivity()).carrito.clear();
-            cargarLista();
-            Toast.makeText(getContext(),"Pedido creado correctamente", Toast.LENGTH_SHORT).show();
+            if(total  <= ((MainActivity) getActivity()).user.getCartera() ) {
+                String id = FirebaseDatabase.getInstance().getReference("pedidos").child(((MainActivity) getActivity()).user.getId()).push().getKey();
+                p.setIdpedido(id);
+                p.setEstado("Revision");
+                p.setMensajeEstado("");
+                p.setIdUsuario(((MainActivity) getActivity()).user.getId());
+                FirebaseDatabase.getInstance().getReference("pedidos").child(((MainActivity) getActivity()).user.getId()).child(id).setValue(p);
+                ((MainActivity) getActivity()).carrito.clear();
+                cargarLista();
+                ((MainActivity) getActivity()).user.setCartera(((MainActivity) getActivity()).user.getCartera()-total);
+                ((MainActivity) getActivity()).user.setReserva(((MainActivity) getActivity()).user.getReserva()+total);
+                FirebaseDatabase.getInstance().getReference("usuarios").child(((MainActivity) getActivity()).user.getId()).setValue(((MainActivity) getActivity()).user);
+                Toast.makeText(getContext(), R.string.ordercorrec, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

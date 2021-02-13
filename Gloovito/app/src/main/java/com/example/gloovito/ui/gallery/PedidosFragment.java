@@ -17,6 +17,7 @@ import com.example.gloovito.R;
 import com.example.gloovito.modelo.Pedido;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PedidosFragment extends Fragment implements PedidosRecyclerViewAdapter.OnPedidosClickListener{
     public ArrayList<Pedido> pedidos;
@@ -40,7 +41,9 @@ public class PedidosFragment extends Fragment implements PedidosRecyclerViewAdap
     }
     public void onStart(){
         super.onStart();
+        ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
         pedidos = new ArrayList<>(((MainActivity)getActivity()).pedidos);
+        Collections.reverse(pedidos);
         recargarLista();
     }
     @Override

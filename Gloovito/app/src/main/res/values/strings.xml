@@ -2,8 +2,8 @@
     <string name="app_name">Gloovito</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Gloovito</string>
+    <string name="nav_header_subtitle">support@gloovito.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -12,8 +12,6 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="buy">Buy</string>
     <string name="edit">Edit</string>
     <string name="weakpass">Your password is weak</string>
@@ -39,4 +37,15 @@
     <string name="ordercanceled">Your order has been canceled</string>
     <string name="ordercomplete">Your order has been completed</string>
     <string name="orderchange">You have changes in one of your orders</string>
+    <string name="emptyuser">You cant insert an empty username</string>
+    <string name="shopcart">Shopping cart</string>
+    <string name="product">Product</string>
+    <string name="recreate">Do you want to create a copy of this order?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="confirmbuy">Do you really want to make this order?</string>
+    <string name="ordercorrec">Order creates correctly</string>
+    <string name="nostock">Not enouth stock</string>
+    <string name="errorlocal">An error ocurred loading the local</string>
+    <string name="locales">Local</string>
 </resources>

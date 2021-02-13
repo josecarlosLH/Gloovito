@@ -1,6 +1,8 @@
 package com.example.gloovito.ui.locales;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gloovito.MainActivity;
 import com.example.gloovito.R;
 import com.example.gloovito.modelo.Local;
+import com.example.gloovito.ui.SplashScreenActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,4 +70,5 @@ public class LocalesFragment extends Fragment implements LocalesRecyclerViewAdap
         b.putSerializable("local",l);
         Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_productosFragment,b);
     }
+
 }

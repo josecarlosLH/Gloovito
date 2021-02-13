@@ -24,9 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class CuentaFragment extends Fragment {
-    private TextView dinero, reservado, usuario;
-    private EditText ingreso;
-    private Button recargar;
+    private TextView dinero, reservado;
+    private EditText ingreso, usuario;
+    private Button recargar,actualizar;
     private Usuario user;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,11 +38,18 @@ public class CuentaFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        usuario = view.findViewById(R.id.textViewNombreUsuarioPerfil);
+        usuario = view.findViewById(R.id.editTextTextNombreUsuarioDetalleUsuario);
         dinero = view.findViewById(R.id.textViewDineroCartera);
         reservado = view.findViewById(R.id.textViewDineroReservado);
         recargar = view.findViewById(R.id.button_cargar_cartera);
         ingreso = view.findViewById(R.id.editTextNumberDecimal);
+        actualizar = view.findViewById(R.id.button_actualizar_nombre);
+        actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actualizarNombre();
+            }
+        });
         recargar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,11 +59,11 @@ public class CuentaFragment extends Fragment {
     }
     public void onStart(){
         super.onStart();
-        user = ((MainActivity)getActivity()).user;
         ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
         cargarInterfaz();
     }
     public void cargarInterfaz(){
+        user = ((MainActivity)getActivity()).user;
         if(user != null){
             usuario.setText(user.getNombre());
             dinero.setText(user.getCartera().toString());
@@ -78,6 +85,16 @@ public class CuentaFragment extends Fragment {
             }catch(NumberFormatException ex){
                 Toast.makeText(getContext(),R.string.errornumber,Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+    public void actualizarNombre(){
+        if(usuario.getText().toString().isEmpty()){
+            Toast.makeText(getContext(),R.string.emptyuser,Toast.LENGTH_SHORT).show();
+        } else {
+            Usuario user2 = ((MainActivity)getActivity()).user;
+            user2.setNombre(usuario.getText().toString());
+            FirebaseDatabase.getInstance().getReference("usuarios").child(user.getId()).setValue(user2);
+            cargarInterfaz();
         }
     }
 }

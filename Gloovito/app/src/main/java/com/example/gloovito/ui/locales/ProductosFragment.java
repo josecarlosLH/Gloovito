@@ -97,7 +97,7 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
             });
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
-            Toast.makeText(getContext(),"El local no se ha cargado correctamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),R.string.errorlocal, Toast.LENGTH_SHORT).show();
         }
     }
     public void cargaLista(){
@@ -106,16 +106,22 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
 
     @Override
     public void anadir(Producto p,String cantidad) {
-        System.out.println("Entra");
         try {
+            int cantidadAnterior = 0;
             Linea linea = new Linea();
             //Obtiene la ultima linea
             if(((MainActivity) getActivity()).carrito.isEmpty()){
                 linea.setNumlinea("1");
             } else
                 linea.setNumlinea("" + (Integer.parseInt(((MainActivity) getActivity()).carrito.get(((MainActivity) getActivity()).carrito.size()-1).getNumlinea())+1));
+            for (Linea li : ((MainActivity) getActivity()).carrito){
+                if(li.getProductoid().equals(p.getIdproducto()) && li.getLocalid().equals(l.getIdlocal())){
+                    cantidadAnterior += li.getCantidad();
+                }
+            }
             int cantidadComprar = Integer.parseInt(cantidad);
-            if(cantidadComprar <= p.getStock()) {
+            cantidadAnterior += cantidadComprar;
+            if(cantidadAnterior <= p.getStock()) {
                 linea.setCantidad(cantidadComprar);
                 linea.setLocal(l.getNombre());
                 linea.setLocalid(l.getIdlocal());
@@ -125,10 +131,10 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
                 linea.setSubtotal(p.getPrecio()*cantidadComprar);
                 ((MainActivity) getActivity()).carrito.add(linea);
             } else {
-                Toast.makeText(getContext(),"No hay suficiente stock", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),R.string.nostock, Toast.LENGTH_SHORT).show();
             }
         }catch(NumberFormatException ex){
-            Toast.makeText(getContext(),"El numero introducido no es correcto", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),R.string.errornumber, Toast.LENGTH_SHORT).show();
         }
     }
     public void onStart(){

@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Linea> carrito;
     public ArrayList<Pedido> pedidos;
     public FloatingActionButton fab;
+    public DatabaseReference pedidosDB,usuario;
+    public ValueEventListener usuarioListener;
+    public ChildEventListener pedidosListener;
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
@@ -48,66 +51,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        carrito = new ArrayList<>();
-        pedidos = new ArrayList<>();
         fab = findViewById(R.id.fab);
-
-        drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
-                .build();
-        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_global_carritoFragment);
-            }
-        });
-        /*ArrayList<Producto> productos= new ArrayList<>();
-        productos.add(new Producto("0","Bebida azucarada","Cocacola",1.00,5));
-        productos.add(new Producto("1","Cerveza lata 50cl","Alhambra",0.50,60));
-        String id = FirebaseDatabase.getInstance().getReference("locales").push().getKey();
-        Local local = new Local("Panaderia pepe","Calle sol. Granada",id,productos);
-        FirebaseDatabase.getInstance().getReference("locales").child(id).setValue(local);*/
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-    public void login(){
-        final View view = this.getCurrentFocus();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("usuarios").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(Usuario.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("pedidos").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        ref2.addChildEventListener(new ChildEventListener() {
+        pedidosDB = FirebaseDatabase.getInstance().getReference("pedidos");
+        pedidosListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
                 Pedido pedido = snapshot.getValue(Pedido.class);
                 if(pedido != null){
                     pedidos.add(pedido);
@@ -152,6 +100,66 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+        };
+        usuario = FirebaseDatabase.getInstance().getReference("usuarios");
+        usuarioListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.getValue(Usuario.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                .setDrawerLayout(drawer)
+                .build();
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.action_global_carritoFragment);
+            }
         });
+        /*ArrayList<Producto> productos= new ArrayList<>();
+        productos.add(new Producto("0","Bebida azucarada","Cocacola",1.00,5));
+        productos.add(new Producto("1","Cerveza lata 50cl","Alhambra",0.50,60));
+        String id = FirebaseDatabase.getInstance().getReference("locales").push().getKey();
+        Local local = new Local("Panaderia pepe","Calle sol. Granada",id,productos);
+        FirebaseDatabase.getInstance().getReference("locales").child(id).setValue(local);*/
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
+    public void login(){
+        final View view = this.getCurrentFocus();
+        carrito = new ArrayList<>();
+        pedidos = new ArrayList<>();
+
+        usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(usuarioListener);
+        pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).orderByChild("idPedido").addChildEventListener(pedidosListener);
+    }
+    public void logout(){
+        usuario.removeEventListener(usuarioListener);
+        pedidosDB.removeEventListener(pedidosListener);
     }
 }

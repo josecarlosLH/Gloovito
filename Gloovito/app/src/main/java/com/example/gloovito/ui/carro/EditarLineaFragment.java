@@ -87,8 +87,15 @@ public class EditarLineaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+                    int cantidadAnterior = 0;
+                    for (Linea li : ((MainActivity) getActivity()).carrito){
+                        if(li.getProductoid().equals(prod.getIdproducto()) && li.getLocalid().equals(l.getLocalid())){
+                            cantidadAnterior += li.getCantidad();
+                        }
+                    }
                     int cantidaActualizar = Integer.parseInt(cantidadElegida.getText().toString());
-                    if(cantidaActualizar < prod.getStock() && cantidaActualizar > 0) {
+                    cantidadAnterior += cantidaActualizar -l.getCantidad();
+                    if(cantidadAnterior <= prod.getStock() && cantidaActualizar > 0) {
                         l.setCantidad(cantidaActualizar);
                         l.setSubtotal(cantidaActualizar * l.getPrecio());
                         for (int i=0; i<((MainActivity) getActivity()).carrito.size();i++){
@@ -96,6 +103,8 @@ public class EditarLineaFragment extends Fragment {
                                 ((MainActivity) getActivity()).carrito.set(i,l);
                             }
                         }
+                    } else {
+                        Toast.makeText(getContext(),R.string.nostock, Toast.LENGTH_SHORT).show();
                     }
                 }catch(NumberFormatException ex){
                     Toast.makeText(getContext(),R.string.errornumber,Toast.LENGTH_SHORT).show();

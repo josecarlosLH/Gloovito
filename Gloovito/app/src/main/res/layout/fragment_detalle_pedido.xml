@@ -19,6 +19,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="58dp"
+            android:background="@drawable/dummy_bg"
+            android:elevation="8dp"
+            android:padding="4dp"
             android:orientation="horizontal">
 
             <TextView
@@ -45,17 +48,39 @@
             android:gravity="center"
             android:text="TextView" />
 
+        <TextView
+            android:id="@+id/textViewEstadoPedidoMensaje"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:gravity="center"
+            android:background="@drawable/dummy_bg"
+            android:elevation="8dp"
+            android:padding="4dp"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recViewDetallePedido"
             android:layout_width="match_parent"
-            android:layout_height="608dp">
+            android:layout_height="554dp"
+            android:background="@drawable/dummy_bg"
+            android:elevation="8dp"
+            android:padding="4dp">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textViewTotalDetallePedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TextView" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/dummy_bg"
+            android:elevation="8dp"
+            android:padding="4dp">
 
             <Button
                 android:id="@+id/buttonReiniciarPedido"

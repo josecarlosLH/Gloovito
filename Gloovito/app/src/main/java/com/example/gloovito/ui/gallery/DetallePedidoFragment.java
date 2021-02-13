@@ -1,10 +1,15 @@
 package com.example.gloovito.ui.gallery;
 
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,11 +17,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.gloovito.MainActivity;
 import com.example.gloovito.R;
+import com.example.gloovito.modelo.Linea;
+import com.example.gloovito.modelo.Local;
 import com.example.gloovito.modelo.Pedido;
+import com.example.gloovito.modelo.Producto;
+import com.example.gloovito.ui.ChargeFragment;
 import com.example.gloovito.ui.carro.LineasRecyclerViewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,11 +37,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import pl.droidsonroids.gif.GifImageView;
+
 public class DetallePedidoFragment extends Fragment {
     private RecyclerView recyclerView;
     private Pedido pedido;
     private Button cancelar,reiniciar;
-    private TextView idPedido,fechaPedido,estadoPedido;
+    private TextView idPedido,fechaPedido,estadoPedido,mensajePedido,totalPedido;
     public DetallePedidoFragment() {
         // Required empty public constructor
     }
@@ -55,12 +72,32 @@ public class DetallePedidoFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recViewDetallePedido);
         cancelar = view.findViewById(R.id.buttonCancelarPedido);
         reiniciar = view.findViewById(R.id.buttonReiniciarPedido);
+        totalPedido = view.findViewById(R.id.textViewTotalDetallePedido);
+        mensajePedido = view.findViewById(R.id.textViewEstadoPedidoMensaje);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelarPedido();
+            }
+        });
+        reiniciar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.restart)
+                        .setMessage(R.string.recreate)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reiniciarPedido();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
             }
         });
     }
@@ -77,15 +114,24 @@ public class DetallePedidoFragment extends Fragment {
     public void cargarInterfaz(){
         idPedido.setText(pedido.getIdpedido());
         fechaPedido.setText(pedido.getFecha());
-        if(pedido.getEstado().equals("Revision")) {
-            estadoPedido.setText(R.string.review);
-            cancelar.setEnabled(true);
+        totalPedido.setText(pedido.getTotal().toString()+"€");
+        switch (pedido.getEstado()) {
+            case "Revision":
+                estadoPedido.setText(R.string.review);
+                estadoPedido.setBackgroundColor(getResources().getColor(R.color.design_default_color_on_primary));
+                cancelar.setEnabled(true);
+                break;
+            case "Cancelado":
+                estadoPedido.setText(R.string.canceled);
+                estadoPedido.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+                break;
+            case "Completado":
+                estadoPedido.setText(R.string.completed);
+                estadoPedido.setBackgroundColor(getResources().getColor(R.color.design_default_color_secondary));
+                break;
         }
-        else if(pedido.getEstado().equals("Cancelado")){
-            estadoPedido.setText(R.string.canceled);
-        } else if(pedido.getEstado().equals("Completado")){
-            estadoPedido.setText(R.string.completed);
-        }
+        if(!pedido.getMensajeEstado().isEmpty())
+            mensajePedido.setText(pedido.getMensajeEstado());
         recargarLista();
     }
     public void recargarLista(){
@@ -101,8 +147,12 @@ public class DetallePedidoFragment extends Fragment {
                 if(ped != null){
                     if (ped.getEstado().equals("Revision")){
                         ped.setEstado("Cancelado");
+                        ped.setMensajeEstado("Cancelado por el usuario");
                         FirebaseDatabase.getInstance().getReference("pedidos").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(pedido.getIdpedido()).setValue(ped);
                         pedido = ped;
+                        ((MainActivity) getActivity()).user.setCartera(((MainActivity) getActivity()).user.getCartera()+ped.getTotal());
+                        ((MainActivity) getActivity()).user.setReserva(((MainActivity) getActivity()).user.getReserva()-ped.getTotal());
+                        FirebaseDatabase.getInstance().getReference("usuarios").child(((MainActivity) getActivity()).user.getId()).setValue(((MainActivity) getActivity()).user);
                         cargarInterfaz();
                     }
                 }
@@ -113,5 +163,65 @@ public class DetallePedidoFragment extends Fragment {
 
             }
         });
+    }
+    public void reiniciarPedido(){
+        final AlertDialog alert = new AlertDialog.Builder(getContext()).create();
+        GifImageView imagen = new GifImageView(getContext());
+        imagen.setImageResource(R.drawable.cargando);
+        alert.setView(imagen);
+        alert.show();
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("locales");
+        final ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(getActivity() != null) {
+                    ((MainActivity) getActivity()).carrito.clear();
+                    HashMap<String, Local> locales = new HashMap<>();
+                    for (DataSnapshot localsnap : dataSnapshot.getChildren()) {
+                        Local loc = localsnap.getValue(Local.class);
+                        locales.put(localsnap.getKey(), loc);
+                    }
+                    for (Linea linea : pedido.getLineas()) {
+                        Producto p = null;
+                        Local local1 = locales.get(linea.getLocalid());
+                        ArrayList<Producto> productos = null;
+                        if (local1 != null) {
+                            productos = local1.getProductos();
+                        }
+                        if (productos != null)
+                            for (Producto prod : productos) {
+                                if (prod.getIdproducto().equals(linea.getProductoid())) {
+                                    p = prod;
+                                }
+                            }
+                        if (p != null) {
+                            if (linea.getCantidad() <= p.getStock()) {
+                                linea.setPrecio(p.getPrecio());
+                                linea.setSubtotal(linea.getPrecio() * linea.getCantidad());
+                                ((MainActivity) getActivity()).carrito.add(linea);
+                            }
+                        }
+                    }
+                    alert.dismiss();
+                    Navigation.findNavController(getView()).navigate(R.id.action_global_carritoFragment);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                alert.dismiss();
+            }
+        };
+        alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                ref.removeEventListener(listener);
+                if(getActivity() != null) {
+                    ((MainActivity) getActivity()).carrito.clear();
+                    Toast.makeText(getContext(), R.string.canceled, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        ref.addListenerForSingleValueEvent(listener);
     }
 }

@@ -54,6 +54,7 @@ public class DetalleLineasRecyclerViewAdapter extends RecyclerView.Adapter<Detal
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mView.setBackground(null);
             nombreLocal = (TextView) view.findViewById(R.id.textViewNombreLocalLinea);
             nombreProducto = (TextView) view.findViewById(R.id.textViewNombreProductoLinea);
             precioycantidad = (TextView) view.findViewById(R.id.textViewPrecioYCantidadProductoLinea);

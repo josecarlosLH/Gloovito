@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.gloovito.ui.locales.LocalesFragment"
-        android:label="@string/menu_home"
+        android:label="@string/locales"
         tools:layout="@layout/fragment_locales" >
         <action
             android:id="@+id/action_nav_home_to_productosFragment"
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.gloovito.ui.gallery.PedidosFragment"
-        android:label="@string/menu_gallery"
+        android:label="@string/orders"
         tools:layout="@layout/fragment_pedidos" >
         <action
             android:id="@+id/action_nav_gallery_to_detallePedidoFragment"
@@ -28,12 +28,12 @@
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.example.gloovito.ui.slideshow.CuentaFragment"
-        android:label="@string/menu_slideshow"
+        android:label="@string/account"
         tools:layout="@layout/fragment_cuenta" />
     <fragment
         android:id="@+id/login"
         android:name="com.example.gloovito.ui.Login"
-        android:label="fragment_login"
+        android:label="@string/login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_login_to_nav_home"
@@ -42,12 +42,12 @@
     <fragment
         android:id="@+id/productosFragment"
         android:name="com.example.gloovito.ui.locales.ProductosFragment"
-        android:label="fragment_productos"
+        android:label="@string/product"
         tools:layout="@layout/fragment_productos" />
     <fragment
         android:id="@+id/carritoFragment"
         android:name="com.example.gloovito.ui.carro.CarritoFragment"
-        android:label="fragment_carrito"
+        android:label="@string/shopcart"
         tools:layout="@layout/fragment_carrito" >
         <action
             android:id="@+id/action_carritoFragment_to_editarLineaFragment"
@@ -56,11 +56,11 @@
     <fragment
         android:id="@+id/editarLineaFragment"
         android:name="com.example.gloovito.ui.carro.EditarLineaFragment"
-        android:label="fragment_editar_linea"
+        android:label="@string/edit"
         tools:layout="@layout/fragment_editar_linea" />
     <fragment
         android:id="@+id/detallePedidoFragment"
         android:name="com.example.gloovito.ui.gallery.DetallePedidoFragment"
-        android:label="fragment_editar_linea"
+        android:label="@string/details"
         tools:layout="@layout/fragment_editar_linea" /><action android:id="@+id/action_global_nav_gallery" app:destination="@id/nav_gallery"/>
 </navigation>

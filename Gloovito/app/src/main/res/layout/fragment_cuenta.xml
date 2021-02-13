@@ -24,20 +24,28 @@
             android:elevation="8dp"
             android:padding="4dp">
 
-            <TextView
-                android:id="@+id/textViewNombreUsuarioPerfil"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <EditText
+                android:id="@+id/editTextTextNombreUsuarioDetalleUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="TextView"
-                android:textSize="18sp" />
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button_actualizar_nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/side_nav_bar"
+                android:text="@string/update" />
 
             <LinearLayout
                 android:layout_width="match_parent"
