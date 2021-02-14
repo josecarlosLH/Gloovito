@@ -1,18 +1,17 @@
 package com.example.gloovito;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.gloovito.modelo.Linea;
-import com.example.gloovito.modelo.Local;
 import com.example.gloovito.modelo.Pedido;
-import com.example.gloovito.modelo.Producto;
 import com.example.gloovito.modelo.Usuario;
 import com.example.gloovito.ui.gallery.PedidosFragment;
+import com.example.gloovito.ui.locales.LocalesFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -24,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -33,6 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
     public Usuario user;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public ValueEventListener usuarioListener;
     public ChildEventListener pedidosListener;
     private AppBarConfiguration mAppBarConfiguration;
+    public NavController navController ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +59,21 @@ public class MainActivity extends AppCompatActivity {
         pedidosListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                System.out.println("add");
                 Pedido pedido = snapshot.getValue(Pedido.class);
                 if(pedido != null){
                     pedidos.add(pedido);
+                }
+
+                Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
+                if(navHostFragment != null) {
+                    Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(navHostFragment.getChildFragmentManager().getFragments().size()-1);
+                    if(fragment != null)
+                        if(fragment instanceof PedidosFragment) {
+                            ((PedidosFragment) fragment).pedidos = new ArrayList<Pedido>(pedidos);
+                            Collections.reverse(((PedidosFragment) fragment).pedidos);
+                            ((PedidosFragment) fragment).recargarLista();
+                        }
                 }
             }
 
@@ -84,11 +99,26 @@ public class MainActivity extends AppCompatActivity {
                 } else if(completado){
                     Toast.makeText(getApplicationContext(),R.string.ordercomplete,Toast.LENGTH_SHORT).show();
                 }
+                Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
+                if(navHostFragment != null) {
+                    Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(navHostFragment.getChildFragmentManager().getFragments().size()-1);
+                    if(fragment != null)
+                        if(fragment instanceof PedidosFragment) {
+                            ((PedidosFragment) fragment).pedidos = new ArrayList<Pedido>(pedidos);
+                            Collections.reverse(((PedidosFragment) fragment).pedidos);
+                            ((PedidosFragment) fragment).recargarLista();
+                        }
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+                Pedido pedido = snapshot.getValue(Pedido.class);
+                for(int i = 0; i<pedidos.size(); i++){
+                    if(pedidos.get(i).getIdpedido().equals(pedido.getIdpedido())){
+                        pedidos.remove(i);
+                    }
+                }
             }
 
             @Override
@@ -121,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
-        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -151,15 +181,32 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
     public void login(){
-        final View view = this.getCurrentFocus();
         carrito = new ArrayList<>();
         pedidos = new ArrayList<>();
-
+        usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(usuarioListener);
+        pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(pedidosListener);
         usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(usuarioListener);
         pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).orderByChild("idPedido").addChildEventListener(pedidosListener);
+
     }
-    public void logout(){
-        usuario.removeEventListener(usuarioListener);
-        pedidosDB.removeEventListener(pedidosListener);
+    public void onBackPressed(){
+        if(navController.getPreviousBackStackEntry() != null && navController.getPreviousBackStackEntry().getDestination().getLabel().equals(getString(R.string.login))){
+            new AlertDialog.Builder(MainActivity.this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.logout)
+                    .setMessage(R.string.confirmlogout)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MainActivity.super.onBackPressed();
+                        }
+
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else
+            super.onBackPressed();
     }
+
 }

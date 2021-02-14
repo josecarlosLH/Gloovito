@@ -48,4 +48,9 @@
     <string name="nostock">No hay suficiente stock</string>
     <string name="errorlocal">Ha ocurrido un error cargando el local</string>
     <string name="locales">Locales</string>
+    <string name="confirmlogout">¿Quieres cerrar sesion?</string>
+    <string name="ordernoexist">El pedido ya no se encuentra disponible</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="addedcorrect">Añadido correctamente</string>
+    <string name="updatedcorrect">Actualizado correctamente</string>
 </resources>

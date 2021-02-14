@@ -130,6 +130,7 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
                 linea.setPrecio(p.getPrecio());
                 linea.setSubtotal(p.getPrecio()*cantidadComprar);
                 ((MainActivity) getActivity()).carrito.add(linea);
+                Toast.makeText(getContext(),R.string.addedcorrect, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(),R.string.nostock, Toast.LENGTH_SHORT).show();
             }

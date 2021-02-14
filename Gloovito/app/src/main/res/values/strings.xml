@@ -48,4 +48,9 @@
     <string name="nostock">Not enouth stock</string>
     <string name="errorlocal">An error ocurred loading the local</string>
     <string name="locales">Local</string>
+    <string name="confirmlogout">Do you want to logout?</string>
+    <string name="ordernoexist">This order is no longer available</string>
+    <string name="logout">Logout</string>
+    <string name="addedcorrect">Added correctly</string>
+    <string name="updatedcorrect">Updated correctly</string>
 </resources>

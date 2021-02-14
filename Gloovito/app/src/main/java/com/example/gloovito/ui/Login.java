@@ -119,7 +119,6 @@ public class Login extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((MainActivity) requireActivity()).logout();
         ((MainActivity)requireActivity()).drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         FirebaseAuth.getInstance().signOut();
         mGoogleSignInClient.signOut();

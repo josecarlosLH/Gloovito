@@ -95,6 +95,7 @@ public class CuentaFragment extends Fragment {
             user2.setNombre(usuario.getText().toString());
             FirebaseDatabase.getInstance().getReference("usuarios").child(user.getId()).setValue(user2);
             cargarInterfaz();
+            Toast.makeText(getContext(),R.string.updatedcorrect, Toast.LENGTH_SHORT).show();
         }
     }
 }

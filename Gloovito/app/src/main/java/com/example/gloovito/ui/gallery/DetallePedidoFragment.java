@@ -155,6 +155,9 @@ public class DetallePedidoFragment extends Fragment {
                         FirebaseDatabase.getInstance().getReference("usuarios").child(((MainActivity) getActivity()).user.getId()).setValue(((MainActivity) getActivity()).user);
                         cargarInterfaz();
                     }
+                } else {
+                    Toast.makeText(getContext(),R.string.ordernoexist,Toast.LENGTH_SHORT);
+                    ((MainActivity)getActivity()).onBackPressed();
                 }
             }
 
