@@ -81,6 +81,7 @@
             android:layout_weight="1"
             android:background="@color/design_default_color_error"
             android:text="X"
+            android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -90,7 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/side_nav_bar"
-            android:text="@string/edit" />
+            android:text="@string/edit"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </LinearLayout>

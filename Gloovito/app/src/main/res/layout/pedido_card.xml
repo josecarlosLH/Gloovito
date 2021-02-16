@@ -55,6 +55,7 @@
             android:layout_weight="1"
             android:background="@drawable/side_nav_bar"
             android:text="@string/details"
+            android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold" />
 

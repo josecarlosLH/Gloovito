@@ -45,7 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/side_nav_bar"
-                android:text="@string/update" />
+                android:text="@string/update"
+                android:textColor="#FFFFFF" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,7 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="69dp"
                 android:background="@drawable/side_nav_bar"
-                android:text="@string/charge" />
+                android:text="@string/charge"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
     </LinearLayout>

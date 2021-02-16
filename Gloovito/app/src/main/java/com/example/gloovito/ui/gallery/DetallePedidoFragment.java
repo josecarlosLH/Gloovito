@@ -2,6 +2,7 @@ package com.example.gloovito.ui.gallery;
 
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -124,6 +125,7 @@ public class DetallePedidoFragment extends Fragment {
             case "Cancelado":
                 estadoPedido.setText(R.string.canceled);
                 estadoPedido.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+                estadoPedido.setTextColor(Color.WHITE);
                 break;
             case "Completado":
                 estadoPedido.setText(R.string.completed);

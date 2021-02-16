@@ -9,20 +9,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#9AFFFFFF">
+        android:background="@drawable/background_login">
 
         <LinearLayout
             android:layout_width="296dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="57dp"
-            android:layout_marginLeft="57dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="80dp"
             android:layout_marginEnd="58dp"
-            android:layout_marginRight="58dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/imageView3">
 
             <EditText
                 android:id="@+id/editTextTextEmailAddress"
@@ -50,6 +48,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/background_boton_login"
                     android:text="@string/login" />
 
                 <Button
@@ -57,6 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/background_boton_login"
                     android:text="@string/register" />
             </LinearLayout>
 
@@ -66,6 +66,17 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:src="@drawable/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
