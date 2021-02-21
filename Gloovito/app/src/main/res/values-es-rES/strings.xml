@@ -53,4 +53,7 @@
     <string name="logout">Cerrar sesión</string>
     <string name="addedcorrect">Añadido correctamente</string>
     <string name="updatedcorrect">Actualizado correctamente</string>
+    <string name="confirmcharge">¿Confirmas el movimiento?</string>
+    <string name="movementconfirm">Confirmación de movimiento</string>
+    <string name="notenoughtmoney">No tienes dinero suficiente</string>
 </resources>

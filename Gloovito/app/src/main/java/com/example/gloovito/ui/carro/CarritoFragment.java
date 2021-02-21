@@ -134,6 +134,8 @@ public class CarritoFragment extends Fragment implements LineasRecyclerViewAdapt
                 ((MainActivity) getActivity()).user.setReserva(((MainActivity) getActivity()).user.getReserva()+total);
                 FirebaseDatabase.getInstance().getReference("usuarios").child(((MainActivity) getActivity()).user.getId()).setValue(((MainActivity) getActivity()).user);
                 Toast.makeText(getContext(), R.string.ordercorrec, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), R.string.notenoughtmoney, Toast.LENGTH_SHORT).show();
             }
         }
     }

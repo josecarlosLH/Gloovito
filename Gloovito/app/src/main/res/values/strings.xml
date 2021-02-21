@@ -53,4 +53,7 @@
     <string name="logout">Logout</string>
     <string name="addedcorrect">Added correctly</string>
     <string name="updatedcorrect">Updated correctly</string>
+    <string name="confirmcharge">Do you really want to make the movement?</string>
+    <string name="movementconfirm">Movement confirm</string>
+    <string name="notenoughtmoney">You dont have enougth money</string>
 </resources>

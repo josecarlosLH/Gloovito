@@ -1,5 +1,6 @@
 package com.example.gloovito.ui.slideshow;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gloovito.MainActivity;
 import com.example.gloovito.R;
+import com.example.gloovito.modelo.Movimiento;
 import com.example.gloovito.modelo.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,11 +28,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class CuentaFragment extends Fragment {
     private TextView dinero, reservado;
     private EditText ingreso, usuario;
     private Button recargar,actualizar;
     private Usuario user;
+    private RecyclerView recvMov;
+    private ArrayList<Movimiento> movimientos;
+    private DatabaseReference refMov;
+    private ValueEventListener listenerRef;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +56,26 @@ public class CuentaFragment extends Fragment {
         recargar = view.findViewById(R.id.button_cargar_cartera);
         ingreso = view.findViewById(R.id.editTextNumberDecimal);
         actualizar = view.findViewById(R.id.button_actualizar_nombre);
+        movimientos = new ArrayList<>();
+        recvMov = view.findViewById(R.id.recviewMovimientos);
+        recvMov.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        listenerRef= new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                movimientos.clear();
+                for(DataSnapshot child : snapshot.getChildren()){
+                    movimientos.add(child.getValue(Movimiento.class));
+                }
+                Collections.reverse(movimientos);
+                cargarInterfaz();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
         actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,32 +85,56 @@ public class CuentaFragment extends Fragment {
         recargar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cargarCartera();
+                new AlertDialog.Builder(getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.movementconfirm)
+                        .setMessage(R.string.confirmcharge)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                cargarCartera();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
             }
         });
     }
+
+    @Override
     public void onStart(){
         super.onStart();
+        user = ((MainActivity)getActivity()).user;
         ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
-        cargarInterfaz();
+        refMov = FirebaseDatabase.getInstance().getReference("movimientos").child(user.getId());
+        refMov.addValueEventListener(listenerRef);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        refMov.removeEventListener(listenerRef);
     }
     public void cargarInterfaz(){
-        user = ((MainActivity)getActivity()).user;
         if(user != null){
             usuario.setText(user.getNombre());
             dinero.setText(user.getCartera().toString());
             reservado.setText(user.getReserva().toString());
+            recvMov.setAdapter(new CuentaRecyclerViewAdapter(movimientos,getContext()));
         }
     }
     public void cargarCartera(){
         if(user != null){
             try {
+                Movimiento mov = new Movimiento();
                 Double ingresoValor = Double.valueOf(ingreso.getText().toString());
                 if (ingresoValor > 0){
-                    Usuario user2 = ((MainActivity)getActivity()).user;
-                    user2.setCartera(user2.getCartera()+ingresoValor);
-                    user = user2;
-                    FirebaseDatabase.getInstance().getReference("usuarios").child(user.getId()).setValue(user2);
+                    mov.setClienteId(user.getId());
+                    mov.setDinero(ingresoValor);
+                    mov.setEstado("Revision");
+                    mov.setMovimientoId(FirebaseDatabase.getInstance().getReference("movimientos").child(user.getId()).push().getKey());
+                    FirebaseDatabase.getInstance().getReference("movimientos").child(user.getId()).child(mov.getMovimientoId()).setValue(mov);
                     cargarInterfaz();
                     Toast.makeText(getContext(),R.string.enteredcorrect,Toast.LENGTH_SHORT).show();
                 }
@@ -98,4 +154,5 @@ public class CuentaFragment extends Fragment {
             Toast.makeText(getContext(),R.string.updatedcorrect, Toast.LENGTH_SHORT).show();
         }
     }
+
 }
