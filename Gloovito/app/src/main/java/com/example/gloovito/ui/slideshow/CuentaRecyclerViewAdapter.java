@@ -37,7 +37,7 @@ public class CuentaRecyclerViewAdapter extends RecyclerView.Adapter<CuentaRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.idMov.setText(mValues.get(position).getMovimientoId());
-        holder.valor.setText(String.valueOf(mValues.get(position).getDinero()));
+        holder.valor.setText(String.valueOf(mValues.get(position).getDinero()+"€"));
         holder.estado.setText(mValues.get(position).getEstado());
         switch (mValues.get(position).getEstado()) {
             case "Cancelado":

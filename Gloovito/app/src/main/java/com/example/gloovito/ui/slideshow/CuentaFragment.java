@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class CuentaFragment extends Fragment {
-    private TextView dinero, reservado;
+    private TextView dinero, reservado,correoCuenta;
     private EditText ingreso, usuario;
     private Button recargar,actualizar;
     private Usuario user;
@@ -56,6 +56,7 @@ public class CuentaFragment extends Fragment {
         recargar = view.findViewById(R.id.button_cargar_cartera);
         ingreso = view.findViewById(R.id.editTextNumberDecimal);
         actualizar = view.findViewById(R.id.button_actualizar_nombre);
+        correoCuenta = view.findViewById(R.id.textViewCuentaCorreoElectronico);
         movimientos = new ArrayList<>();
         recvMov = view.findViewById(R.id.recviewMovimientos);
         recvMov.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -120,6 +121,7 @@ public class CuentaFragment extends Fragment {
         if(user != null){
             usuario.setText(user.getNombre());
             dinero.setText(user.getCartera().toString());
+            correoCuenta.setText(user.getMail());
             reservado.setText(user.getReserva().toString());
             recvMov.setAdapter(new CuentaRecyclerViewAdapter(movimientos,getContext()));
         }
