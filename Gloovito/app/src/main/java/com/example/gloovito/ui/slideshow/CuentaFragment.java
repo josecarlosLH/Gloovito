@@ -31,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class CuentaFragment extends Fragment {
+public class CuentaFragment extends Fragment implements CuentaRecyclerViewAdapter.OnMovimientoClickListener {
     private TextView dinero, reservado,correoCuenta;
     private EditText ingreso, usuario;
     private Button recargar,actualizar;
@@ -118,7 +118,7 @@ public class CuentaFragment extends Fragment {
         refMov.removeEventListener(listenerRef);
     }
     public void cargarInterfaz(){
-        recvMov.setAdapter(new CuentaRecyclerViewAdapter(movimientos,getContext()));
+        recvMov.setAdapter(new CuentaRecyclerViewAdapter(movimientos,getContext(),this));
     }
     public void cargarUsuario(){
         user = ((MainActivity)getActivity()).user;
@@ -160,4 +160,10 @@ public class CuentaFragment extends Fragment {
         }
     }
 
+    @Override
+    public void cancelar(Movimiento m) {
+        System.out.println("Entra");
+        m.setEstado("Cancelado");
+        FirebaseDatabase.getInstance().getReference("movimientos").child(user.getId()).child(m.getMovimientoId()).setValue(m);
+    }
 }

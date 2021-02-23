@@ -51,7 +51,7 @@ public class ProductosRecyclerViewAdapter extends RecyclerView.Adapter<Productos
                     .into(holder.mImagen);
         }
         holder.nombre.setText(mValues.get(position).getNombre());
-        holder.precio.setText(mValues.get(position).getPrecio().toString());
+        holder.precio.setText(mValues.get(position).getPrecio().toString()+"€");
         holder.cantidad.setText(mValues.get(position).getStock()+"/");
         holder.producto = mValues.get(position);
     }
