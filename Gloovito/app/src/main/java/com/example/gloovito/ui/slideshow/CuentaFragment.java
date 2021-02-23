@@ -60,7 +60,6 @@ public class CuentaFragment extends Fragment {
         movimientos = new ArrayList<>();
         recvMov = view.findViewById(R.id.recviewMovimientos);
         recvMov.setLayoutManager(new LinearLayoutManager(getContext()));
-
         listenerRef= new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -111,6 +110,7 @@ public class CuentaFragment extends Fragment {
         ((MainActivity)getActivity()).fab.setVisibility(View.INVISIBLE);
         refMov = FirebaseDatabase.getInstance().getReference("movimientos").child(user.getId());
         refMov.addValueEventListener(listenerRef);
+        cargarUsuario();
     }
     @Override
     public void onStop() {
@@ -118,12 +118,15 @@ public class CuentaFragment extends Fragment {
         refMov.removeEventListener(listenerRef);
     }
     public void cargarInterfaz(){
-        if(user != null){
+        recvMov.setAdapter(new CuentaRecyclerViewAdapter(movimientos,getContext()));
+    }
+    public void cargarUsuario(){
+        user = ((MainActivity)getActivity()).user;
+        if(user != null) {
             usuario.setText(user.getNombre());
             dinero.setText(user.getCartera().toString());
             correoCuenta.setText(user.getMail());
             reservado.setText(user.getReserva().toString());
-            recvMov.setAdapter(new CuentaRecyclerViewAdapter(movimientos,getContext()));
         }
     }
     public void cargarCartera(){

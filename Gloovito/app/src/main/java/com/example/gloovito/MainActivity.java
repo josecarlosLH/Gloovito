@@ -11,6 +11,7 @@ import com.example.gloovito.modelo.Pedido;
 import com.example.gloovito.modelo.Usuario;
 import com.example.gloovito.ui.gallery.PedidosFragment;
 import com.example.gloovito.ui.locales.LocalesFragment;
+import com.example.gloovito.ui.slideshow.CuentaFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -136,6 +137,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(Usuario.class);
+                Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
+                if(navHostFragment != null) {
+                    Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(navHostFragment.getChildFragmentManager().getFragments().size()-1);
+                    if(fragment != null)
+                        if(fragment instanceof CuentaFragment) {
+                            ((CuentaFragment) fragment).cargarUsuario();
+                        }
+                }
             }
 
             @Override
