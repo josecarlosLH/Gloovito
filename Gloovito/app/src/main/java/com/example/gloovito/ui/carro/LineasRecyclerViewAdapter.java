@@ -41,7 +41,7 @@ public class LineasRecyclerViewAdapter extends RecyclerView.Adapter<LineasRecycl
         holder.nombreLocal.setText(mValues.get(position).getLocal());
         holder.nombreProducto.setText(mValues.get(position).getProducto());
         holder.precioycantidad.setText(mValues.get(position).getPrecio()+"€ X "+mValues.get(position).getCantidad() );
-        holder.subtotal.setText(mValues.get(position).getSubtotal().toString());
+        holder.subtotal.setText(mValues.get(position).getSubtotal().toString()+"€");
         holder.numLinea.setText(mValues.get(position).getNumlinea());
         holder.linea = mValues.get(position);
     }

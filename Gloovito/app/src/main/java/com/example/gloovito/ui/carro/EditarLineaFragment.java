@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.gloovito.MainActivity;
 import com.example.gloovito.R;
 import com.example.gloovito.modelo.Linea;
@@ -31,6 +33,7 @@ public class EditarLineaFragment extends Fragment {
     private TextView nombre,cantidad, precioArticulo;
     private Button boton;
     private EditText cantidadElegida;
+    private ImageView imagenProducto;
     public EditarLineaFragment() {
     }
 
@@ -55,6 +58,7 @@ public class EditarLineaFragment extends Fragment {
         cantidadElegida = view.findViewById(R.id.editTextTextPersonName);
         precioArticulo = view.findViewById(R.id.textViewPrecioEditarLinea);
         boton = view.findViewById(R.id.button_confirmar_editar);
+        imagenProducto = view.findViewById(R.id.imageViewEditarLinea);
         Bundle b = this.getArguments();
         if(b != null) {
             l = (Linea) b.get("lineas");
@@ -83,6 +87,17 @@ public class EditarLineaFragment extends Fragment {
         cantidad.setText(prod.getStock()+"/");
         precioArticulo.setText(prod.getPrecio()+" €");
         cantidadElegida.setText(String.valueOf(l.getCantidad()));
+        if(!prod.getImagenURL().equals("default")) {
+            Glide.with(getContext())
+                    .load(prod.getImagenURL())
+                    .circleCrop()
+                    .into(imagenProducto);
+        } else {
+            Glide.with(getContext())
+                    .load(R.drawable.defaultimage)
+                    .circleCrop()
+                    .into(imagenProducto);
+        }
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

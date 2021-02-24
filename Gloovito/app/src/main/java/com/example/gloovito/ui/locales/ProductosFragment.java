@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +31,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ProductosFragment extends Fragment implements ProductosRecyclerViewAdapter.OnProductosClickListener{
+public class ProductosFragment extends Fragment implements ProductosRecyclerViewAdapter.OnProductosClickListener, SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView recyclerView;
     private Local l;
     private ImageView imagenLocal;
     private TextView nombre,direccion;
     private ArrayList<Producto>lista;
+    private SwipeRefreshLayout swipeLayout;
     public ProductosFragment() {
         // Required empty public constructor
     }
@@ -48,8 +50,14 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_productos, container, false);
+        View root = inflater.inflate(R.layout.fragment_productos, container, false);
+        swipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_container_productos);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_green_dark),
+                getResources().getColor(android.R.color.holo_red_dark),
+                getResources().getColor(android.R.color.holo_blue_dark),
+                getResources().getColor(android.R.color.holo_orange_dark));
+        return root;
     }
 
     @Override
@@ -78,27 +86,31 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
             }
             nombre.setText(l.getNombre());
             direccion.setText(l.getDireccion());
-            FirebaseDatabase.getInstance().getReference("locales").child(l.getIdlocal()).child("productos").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    lista.clear();
-                    for (DataSnapshot prod : snapshot.getChildren()) {
-                        Producto p = prod.getValue(Producto.class);
-                        if (p != null)
-                            lista.add(p);
-                    }
-                    cargaLista();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+            cargarProductos();
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
             Toast.makeText(getContext(),R.string.errorlocal, Toast.LENGTH_SHORT).show();
         }
+    }
+    public void cargarProductos(){
+        FirebaseDatabase.getInstance().getReference("locales").child(l.getIdlocal()).child("productos").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                lista.clear();
+                for (DataSnapshot prod : snapshot.getChildren()) {
+                    Producto p = prod.getValue(Producto.class);
+                    if (p != null)
+                        lista.add(p);
+                }
+                cargaLista();
+                swipeLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     public void cargaLista(){
         recyclerView.setAdapter(new ProductosRecyclerViewAdapter(lista,getContext(),this));
@@ -141,5 +153,10 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
     public void onStart(){
         super.onStart();
         ((MainActivity)getActivity()).fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRefresh() {
+        cargarProductos();
     }
 }
