@@ -26,15 +26,24 @@
         <TextView
             android:id="@+id/textViewNombreProducto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="TextView" />
 
         <TextView
+            android:id="@+id/textViewDescripcionProductoLista"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="10sp" />
+
+        <TextView
             android:id="@+id/textViewProductoPrecio"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="TextView" />

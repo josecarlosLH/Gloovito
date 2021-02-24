@@ -53,6 +53,7 @@ public class ProductosRecyclerViewAdapter extends RecyclerView.Adapter<Productos
         holder.nombre.setText(mValues.get(position).getNombre());
         holder.precio.setText(mValues.get(position).getPrecio().toString()+"€");
         holder.cantidad.setText(mValues.get(position).getStock()+"/");
+        holder.descipcion.setText(mValues.get(position).getDescipcion());
         holder.producto = mValues.get(position);
     }
     public interface OnProductosClickListener {
@@ -66,7 +67,7 @@ public class ProductosRecyclerViewAdapter extends RecyclerView.Adapter<Productos
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView mImagen;
-        public final TextView nombre,precio,cantidad;
+        public final TextView nombre,precio,cantidad,descipcion;
         public final EditText cantidadComprar;
         public final Button anadir;
         public Producto producto;
@@ -80,6 +81,7 @@ public class ProductosRecyclerViewAdapter extends RecyclerView.Adapter<Productos
             cantidad = (TextView) view.findViewById(R.id.textViewProductoCantidad);
             anadir = view.findViewById(R.id.button_anadir_producto);
             cantidadComprar = view.findViewById(R.id.editTextNumberCantidad);
+            descipcion = view.findViewById(R.id.textViewDescripcionProductoLista);
             anadir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
