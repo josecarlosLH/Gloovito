@@ -146,6 +146,7 @@ public class DetallePedidoFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Pedido ped= dataSnapshot.getValue(Pedido.class);
                 if(ped != null){
+                    //Cancela el pedido y devuelve el dinero del reservado a la cartera
                     if (ped.getEstado().equals("Revision")){
                         ped.setEstado("Cancelado");
                         ped.setMensajeEstado("Cancelado por el usuario");
@@ -169,6 +170,7 @@ public class DetallePedidoFragment extends Fragment {
         });
     }
     public void reiniciarPedido(){
+        //Se abre un dialogo con un spinner
         final AlertDialog alert = new AlertDialog.Builder(getContext()).create();
         GifImageView imagen = new GifImageView(getContext());
         imagen.setImageResource(R.drawable.cargando);
@@ -179,6 +181,7 @@ public class DetallePedidoFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(getActivity() != null) {
+                    //Limpia el carrito y comprueba que los productos existen y tienen stock y los mete.
                     ((MainActivity) getActivity()).carrito.clear();
                     HashMap<String, Local> locales = new HashMap<>();
                     for (DataSnapshot localsnap : dataSnapshot.getChildren()) {

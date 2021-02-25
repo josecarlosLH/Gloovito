@@ -154,6 +154,7 @@ public class Login extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    //Crea los datos del usuario en la bd
                                     Usuario user = new Usuario();
                                     user.setId(task.getResult().getUser().getUid());
                                     if (task.getResult().getUser().getDisplayName() != null)

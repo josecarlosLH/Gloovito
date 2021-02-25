@@ -133,6 +133,7 @@ public class ProductosFragment extends Fragment implements ProductosRecyclerView
             }
             int cantidadComprar = Integer.parseInt(cantidad);
             cantidadAnterior += cantidadComprar;
+            //Comprueba que no se estan añadiendo mas productos que los que hay en stock
             if(cantidadAnterior <= p.getStock()) {
                 linea.setCantidad(cantidadComprar);
                 linea.setLocal(l.getNombre());

@@ -102,6 +102,7 @@ public class EditarLineaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+                    //Comprueba que la nueva cantidad no sea mayor que el stock y cambia los datos
                     int cantidadAnterior = 0;
                     for (Linea li : ((MainActivity) getActivity()).carrito){
                         if(li.getProductoid().equals(prod.getIdproducto()) && li.getLocalid().equals(l.getLocalid())){

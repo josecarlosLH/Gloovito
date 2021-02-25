@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 if(pedido != null){
                     pedidos.add(pedido);
                 }
-
+                //Si estas en el fragment de la lista pedidos, actualiza la lista
                 Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
                 if(navHostFragment != null) {
                     Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(navHostFragment.getChildFragmentManager().getFragments().size()-1);
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                             completado = true;
                     }
                 }
+                //Muestra una notificacion cuando ocurre algun cambio en un pedido
                 if(cancelado & completado){
                     Toast.makeText(getApplicationContext(),R.string.orderchange,Toast.LENGTH_SHORT).show();
                 } else if(cancelado){
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if(completado){
                     Toast.makeText(getApplicationContext(),R.string.ordercomplete,Toast.LENGTH_SHORT).show();
                 }
+                //Si estas en el fragment de la lista pedidos, actualiza la lista
                 Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
                 if(navHostFragment != null) {
                     Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(navHostFragment.getChildFragmentManager().getFragments().size()-1);
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(Usuario.class);
+                //Si estas en el fragment cuenta, actualiza los datos en la interfaz
                 Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
                 if(navHostFragment != null) {
                     Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(navHostFragment.getChildFragmentManager().getFragments().size()-1);
