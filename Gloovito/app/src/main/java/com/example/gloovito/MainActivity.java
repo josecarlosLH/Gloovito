@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         pedidosListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                System.out.println("add");
                 Pedido pedido = snapshot.getValue(Pedido.class);
                 if(pedido != null){
                     pedidos.add(pedido);
@@ -82,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                System.out.println("hace modificar");
                 Pedido pedido = snapshot.getValue(Pedido.class);
                 boolean cancelado = false;
                 boolean completado = false;

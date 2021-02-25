@@ -145,7 +145,6 @@ public class DetallePedidoFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Pedido ped= dataSnapshot.getValue(Pedido.class);
-                System.out.println("Hace evento");
                 if(ped != null){
                     if (ped.getEstado().equals("Revision")){
                         ped.setEstado("Cancelado");
