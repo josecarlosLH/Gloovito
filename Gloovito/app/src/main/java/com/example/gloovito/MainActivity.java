@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Linea> carrito;
     public ArrayList<Pedido> pedidos;
     public FloatingActionButton fab;
+    public boolean logueado;
     public DatabaseReference pedidosDB,usuario;
     public ValueEventListener usuarioListener;
     public ChildEventListener pedidosListener;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
+        logueado = false;
         pedidosDB = FirebaseDatabase.getInstance().getReference("pedidos");
         pedidosListener = new ChildEventListener() {
             @Override
@@ -169,12 +171,6 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.action_global_carritoFragment);
             }
         });
-        /*ArrayList<Producto> productos= new ArrayList<>();
-        productos.add(new Producto("0","Bebida azucarada","Cocacola",1.00,5));
-        productos.add(new Producto("1","Cerveza lata 50cl","Alhambra",0.50,60));
-        String id = FirebaseDatabase.getInstance().getReference("locales").push().getKey();
-        Local local = new Local("Panaderia pepe","Calle sol. Granada",id,productos);
-        FirebaseDatabase.getInstance().getReference("locales").child(id).setValue(local);*/
     }
 
     @Override
@@ -192,11 +188,21 @@ public class MainActivity extends AppCompatActivity {
     public void login(){
         carrito = new ArrayList<>();
         pedidos = new ArrayList<>();
-        usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(usuarioListener);
-        pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(pedidosListener);
-        usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(usuarioListener);
-        pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).orderByChild("idPedido").addChildEventListener(pedidosListener);
-
+        logueado = true;
+    }
+    public void onPause() {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(usuarioListener);
+            pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(pedidosListener);
+        }
+        super.onPause();
+    }
+    public void onResume() {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).orderByChild("idPedido").addChildEventListener(pedidosListener);
+            usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(usuarioListener);
+        }
+        super.onResume();
     }
     public void onBackPressed(){
         if(navController.getPreviousBackStackEntry() != null && navController.getPreviousBackStackEntry().getDestination().getLabel().equals(getString(R.string.login))){
@@ -208,6 +214,10 @@ public class MainActivity extends AppCompatActivity {
                     {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                                usuario.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(usuarioListener);
+                                pedidosDB.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).removeEventListener(pedidosListener);
+                            }
                             MainActivity.super.onBackPressed();
                         }
 
